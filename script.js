@@ -22,7 +22,6 @@ function getURLParameters() {
     const safeDecodeParam = (value) => {
         if (!value) return '';
         try {
-            // Double-decode in case of double encoding
             let decoded = value;
             try {
                 decoded = decodeURIComponent(value.replace(/\+/g, ' '));
@@ -35,10 +34,18 @@ function getURLParameters() {
         }
     };
 
+    // Helper to fix ISO date strings where + became space
+    const fixISODate = (value) => {
+        if (!value) return null;
+        // URL decoding converts + to space, but we need + for timezone offset
+        // Pattern: "2025-11-23T21:16:00 02:00" should be "2025-11-23T21:16:00+02:00"
+        return value.replace(/(\d{2}:\d{2}:\d{2})\s(\d{2}:\d{2})$/, '$1+$2');
+    };
+
     return {
         title: safeDecodeParam(params.get('title')) || 'Untitled Event',
-        start: params.get('start'),
-        end: params.get('end'),
+        start: fixISODate(params.get('start')),
+        end: fixISODate(params.get('end')),
         tz: params.get('tz') || 'UTC',
         desc: safeDecodeParam(params.get('desc')) || '',
         img: params.get('img') || ''
