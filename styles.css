@@ -1,0 +1,290 @@
+/* ========================================
+   InviteDay - Event Page Styles
+   Modern, pastel-themed design
+   ======================================== */
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI',
+                 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #fef6f8 0%, #f8f4fb 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #2d2d2d;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* ========================================
+   Welcome Section
+   ======================================== */
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-top: 20px;
+}
+
+.welcome-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #9b8aa4;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.event-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2d2d2d;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+/* ========================================
+   Date & Time Section
+   ======================================== */
+
+.datetime-section {
+    margin-bottom: 16px;
+}
+
+.datetime-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 12px rgba(155, 138, 164, 0.08);
+}
+
+.date-icon {
+    font-size: 40px;
+    line-height: 1;
+}
+
+.datetime-content {
+    flex: 1;
+}
+
+.event-date {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d2d2d;
+    margin-bottom: 4px;
+}
+
+.event-time {
+    font-size: 16px;
+    color: #6b6b6b;
+    font-weight: 500;
+}
+
+/* ========================================
+   Helper Text
+   ======================================== */
+
+.helper-text {
+    text-align: center;
+    font-size: 15px;
+    color: #8b7a93;
+    margin-bottom: 32px;
+    font-weight: 500;
+}
+
+/* ========================================
+   Calendar Buttons
+   ======================================== */
+
+.buttons-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.calendar-btn {
+    width: 100%;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.calendar-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.calendar-btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Google Calendar Button */
+.google-btn {
+    background: linear-gradient(135deg, #fef0f3 0%, #fee8ed 100%);
+    color: #d14361;
+}
+
+.google-btn:hover {
+    background: linear-gradient(135deg, #fee8ed 0%, #fddde4 100%);
+}
+
+/* Apple Calendar Button */
+.apple-btn {
+    background: linear-gradient(135deg, #e8f2fc 0%, #dde9f8 100%);
+    color: #4a7ba7;
+}
+
+.apple-btn:hover {
+    background: linear-gradient(135deg, #dde9f8 0%, #d2e0f4 100%);
+}
+
+/* Outlook Button */
+.outlook-btn {
+    background: linear-gradient(135deg, #f3edf7 0%, #ede3f3 100%);
+    color: #7d5ba6;
+}
+
+.outlook-btn:hover {
+    background: linear-gradient(135deg, #ede3f3 0%, #e7d9ef 100%);
+}
+
+/* ========================================
+   Description Section
+   ======================================== */
+
+.description-section {
+    margin-bottom: 24px;
+}
+
+.description-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(155, 138, 164, 0.08);
+}
+
+.description-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d2d2d;
+    margin-bottom: 12px;
+}
+
+.description-text {
+    font-size: 15px;
+    color: #6b6b6b;
+    line-height: 1.6;
+}
+
+/* ========================================
+   Image Section
+   ======================================== */
+
+.image-section {
+    margin-bottom: 24px;
+}
+
+.event-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+
+.footer {
+    text-align: center;
+    padding: 32px 0 24px;
+    margin-top: 40px;
+}
+
+.footer p {
+    font-size: 13px;
+    color: #b0a0b8;
+    font-weight: 500;
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (min-width: 768px) {
+    body {
+        padding: 40px;
+    }
+
+    .event-title {
+        font-size: 42px;
+    }
+
+    .event-date {
+        font-size: 22px;
+    }
+
+    .event-time {
+        font-size: 18px;
+    }
+
+    .calendar-btn {
+        padding: 20px 28px;
+        font-size: 17px;
+    }
+
+    .helper-text {
+        font-size: 16px;
+    }
+}
+
+/* ========================================
+   Loading State
+   ======================================== */
+
+.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ========================================
+   Error State
+   ======================================== */
+
+.error-message {
+    background: linear-gradient(135deg, #ffe8e8 0%, #ffd5d5 100%);
+    color: #c93a3a;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: 500;
+}
