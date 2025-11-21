@@ -4,17 +4,43 @@
  */
 
 // ========================================
+// Configuration
+// ========================================
+
+// Cloudflare Worker endpoint for ICS generation
+// UPDATE THIS after deploying your worker!
+const ICS_WORKER_HOST = 'inviteday-ics.YOUR-SUBDOMAIN.workers.dev';
+
+// ========================================
 // Parse URL Parameters
 // ========================================
 
 function getURLParameters() {
     const params = new URLSearchParams(window.location.search);
+
+    // Helper to safely decode UTF-8 strings (handles Finnish ä, ö, etc.)
+    const safeDecodeParam = (value) => {
+        if (!value) return '';
+        try {
+            // Double-decode in case of double encoding
+            let decoded = value;
+            try {
+                decoded = decodeURIComponent(value.replace(/\+/g, ' '));
+            } catch (e) {
+                // Already decoded or invalid
+            }
+            return decoded;
+        } catch (e) {
+            return value;
+        }
+    };
+
     return {
-        title: params.get('title') || 'Untitled Event',
+        title: safeDecodeParam(params.get('title')) || 'Untitled Event',
         start: params.get('start'),
         end: params.get('end'),
         tz: params.get('tz') || 'UTC',
-        desc: params.get('desc') || '',
+        desc: safeDecodeParam(params.get('desc')) || '',
         img: params.get('img') || ''
     };
 }
@@ -24,8 +50,6 @@ function getURLParameters() {
 // ========================================
 
 function parseISODate(isoString) {
-    // Safari doesn't always handle timezone offsets correctly
-    // Parse manually to ensure cross-browser compatibility
     if (!isoString) return null;
 
     // Try native parsing first
@@ -34,23 +58,20 @@ function parseISODate(isoString) {
         return date;
     }
 
-    // Manual parsing for Safari compatibility
-    // Format: 2026-01-31T16:00:00+02:00 or 2026-01-31T16:00:00Z
+    // Manual parsing for Safari/iOS compatibility
     const regex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})([+-](\d{2}):(\d{2})|Z)?$/;
     const match = isoString.match(regex);
 
     if (match) {
         const year = parseInt(match[1], 10);
-        const month = parseInt(match[2], 10) - 1; // JS months are 0-indexed
+        const month = parseInt(match[2], 10) - 1;
         const day = parseInt(match[3], 10);
         const hours = parseInt(match[4], 10);
         const minutes = parseInt(match[5], 10);
         const seconds = parseInt(match[6], 10);
 
-        // Create date in UTC first
         date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
 
-        // Apply timezone offset if present
         if (match[7] && match[7] !== 'Z') {
             const sign = match[7].charAt(0) === '+' ? -1 : 1;
             const offsetHours = parseInt(match[8], 10);
@@ -78,7 +99,6 @@ function formatEventDateTime(startISO, endISO, timezone) {
             throw new Error('Failed to parse dates');
         }
 
-        // Format date: "Saturday, March 1, 2025"
         const dateOptions = {
             weekday: 'long',
             year: 'numeric',
@@ -88,7 +108,6 @@ function formatEventDateTime(startISO, endISO, timezone) {
         };
         const formattedDate = startDate.toLocaleDateString('en-US', dateOptions);
 
-        // Format time: "6:00 PM – 9:00 PM"
         const timeOptions = {
             hour: 'numeric',
             minute: '2-digit',
@@ -98,16 +117,10 @@ function formatEventDateTime(startISO, endISO, timezone) {
         const endTime = endDate.toLocaleTimeString('en-US', timeOptions);
         const formattedTime = `${startTime} – ${endTime}`;
 
-        return {
-            date: formattedDate,
-            time: formattedTime
-        };
+        return { date: formattedDate, time: formattedTime };
     } catch (error) {
         console.error('Error formatting date/time:', error);
-        return {
-            date: 'Date unavailable',
-            time: 'Time unavailable'
-        };
+        return { date: 'Date unavailable', time: 'Time unavailable' };
     }
 }
 
@@ -124,7 +137,6 @@ function generateGoogleCalendarURL(title, startISO, endISO, description, timezon
             throw new Error('Failed to parse dates');
         }
 
-        // Format: YYYYMMDDTHHMMSSZ
         const formatDateForGoogle = (date) => {
             const year = date.getUTCFullYear();
             const month = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -135,11 +147,8 @@ function generateGoogleCalendarURL(title, startISO, endISO, description, timezon
             return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
         };
 
-        const startFormatted = formatDateForGoogle(startDate);
-        const endFormatted = formatDateForGoogle(endDate);
-        const dates = `${startFormatted}/${endFormatted}`;
+        const dates = `${formatDateForGoogle(startDate)}/${formatDateForGoogle(endDate)}`;
 
-        const baseURL = 'https://calendar.google.com/calendar/render';
         const params = new URLSearchParams({
             action: 'TEMPLATE',
             text: title,
@@ -148,7 +157,7 @@ function generateGoogleCalendarURL(title, startISO, endISO, description, timezon
             ctz: timezone
         });
 
-        return `${baseURL}?${params.toString()}`;
+        return `https://calendar.google.com/calendar/render?${params.toString()}`;
     } catch (error) {
         console.error('Error generating Google Calendar URL:', error);
         return null;
@@ -161,7 +170,6 @@ function generateGoogleCalendarURL(title, startISO, endISO, description, timezon
 
 function generateOutlookCalendarURL(title, startISO, endISO, description) {
     try {
-        const baseURL = 'https://outlook.live.com/calendar/0/deeplink/compose';
         const params = new URLSearchParams({
             path: '/calendar/action/compose',
             rru: 'addevent',
@@ -171,7 +179,7 @@ function generateOutlookCalendarURL(title, startISO, endISO, description) {
             body: description
         });
 
-        return `${baseURL}?${params.toString()}`;
+        return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
     } catch (error) {
         console.error('Error generating Outlook Calendar URL:', error);
         return null;
@@ -179,104 +187,33 @@ function generateOutlookCalendarURL(title, startISO, endISO, description) {
 }
 
 // ========================================
-// ICS File Generation (Apple/iOS/Other)
+// Webcal URL Generation (Apple/iOS/Other)
 // ========================================
 
-function generateICSFile(title, startISO, endISO, description, timezone) {
-    try {
-        const startDate = parseISODate(startISO);
-        const endDate = parseISODate(endISO);
-        const now = new Date();
+function generateWebcalURL(title, startISO, endISO, description, timezone) {
+    const params = new URLSearchParams({
+        title: title,
+        start: startISO,
+        end: endISO,
+        desc: description,
+        tz: timezone
+    });
 
-        if (!startDate || !endDate) {
-            throw new Error('Failed to parse dates');
-        }
-
-        // Format dates for ICS (YYYYMMDDTHHMMSSZ)
-        const formatDateForICS = (date) => {
-            const year = date.getUTCFullYear();
-            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(date.getUTCDate()).padStart(2, '0');
-            const hours = String(date.getUTCHours()).padStart(2, '0');
-            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-            const seconds = String(date.getUTCSeconds()).padStart(2, '0');
-            return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
-        };
-
-        const uid = `${Date.now()}@inviteday.app`;
-        const dtstamp = formatDateForICS(now);
-        const dtstart = formatDateForICS(startDate);
-        const dtend = formatDateForICS(endDate);
-
-        // Clean description (escape special characters)
-        const cleanDescription = description.replace(/\n/g, '\\n').replace(/,/g, '\\,');
-
-        // Build ICS content
-        const icsContent = [
-            'BEGIN:VCALENDAR',
-            'VERSION:2.0',
-            'PRODID:-//InviteDay//EN',
-            'CALSCALE:GREGORIAN',
-            'METHOD:PUBLISH',
-            'BEGIN:VEVENT',
-            `UID:${uid}`,
-            `DTSTAMP:${dtstamp}`,
-            `DTSTART:${dtstart}`,
-            `DTEND:${dtend}`,
-            `SUMMARY:${title}`,
-            description ? `DESCRIPTION:${cleanDescription}` : '',
-            'BEGIN:VALARM',
-            'TRIGGER:-P1D',
-            'ACTION:DISPLAY',
-            'DESCRIPTION:Reminder: ' + title,
-            'END:VALARM',
-            'END:VEVENT',
-            'END:VCALENDAR'
-        ].filter(line => line).join('\r\n');
-
-        return icsContent;
-    } catch (error) {
-        console.error('Error generating ICS file:', error);
-        return null;
-    }
+    // webcal:// protocol triggers native calendar app on all platforms
+    return `webcal://${ICS_WORKER_HOST}/?${params.toString()}`;
 }
 
-function downloadICSFile(icsContent, filename = 'invite.ics') {
-    try {
-        // Detect iOS
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+// Fallback HTTPS URL for ICS download (desktop browsers)
+function generateICSDownloadURL(title, startISO, endISO, description, timezone) {
+    const params = new URLSearchParams({
+        title: title,
+        start: startISO,
+        end: endISO,
+        desc: description,
+        tz: timezone
+    });
 
-        if (isIOS) {
-            // For iOS: Use data URI approach which works better
-            const dataUri = 'data:text/calendar,' + encodeURIComponent(icsContent);
-            window.open(dataUri, '_blank');
-
-            // Show helpful message for iOS users
-            setTimeout(() => {
-                alert('Calendar file opened. Tap "Add" or "Add All" to save the event to your calendar.');
-            }, 500);
-        } else {
-            // For other devices: Use blob download
-            const blob = new Blob([icsContent], { type: 'text/calendar' });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        }
-    } catch (error) {
-        console.error('Error downloading ICS file:', error);
-        // Fallback: try data URI for all
-        try {
-            const dataUri = 'data:text/calendar,' + encodeURIComponent(icsContent);
-            window.open(dataUri, '_blank');
-        } catch (fallbackError) {
-            alert('Could not create calendar event. Please try Google Calendar instead.');
-        }
-    }
+    return `https://${ICS_WORKER_HOST}/?${params.toString()}`;
 }
 
 // ========================================
@@ -284,21 +221,17 @@ function downloadICSFile(icsContent, filename = 'invite.ics') {
 // ========================================
 
 function displayEventInfo(eventData) {
-    // Title
     document.getElementById('eventTitle').textContent = eventData.title;
 
-    // Date & Time
     const { date, time } = formatEventDateTime(eventData.start, eventData.end, eventData.tz);
     document.getElementById('eventDate').textContent = date;
     document.getElementById('eventTime').textContent = time;
 
-    // Description (optional)
     if (eventData.desc) {
         document.getElementById('descriptionText').textContent = eventData.desc;
         document.getElementById('descriptionSection').style.display = 'block';
     }
 
-    // Image (optional - not implemented in v1)
     if (eventData.img) {
         document.getElementById('eventImage').src = eventData.img;
         document.getElementById('imageSection').style.display = 'block';
@@ -325,19 +258,20 @@ function setupCalendarButtons(eventData) {
         }
     });
 
-    // Apple/iOS/Other Calendar Button (ICS Download)
+    // Apple/iOS/Other Calendar Button (webcal://)
     const appleBtn = document.getElementById('appleBtn');
     appleBtn.addEventListener('click', () => {
-        const icsContent = generateICSFile(
+        const webcalUrl = generateWebcalURL(
             eventData.title,
             eventData.start,
             eventData.end,
             eventData.desc,
             eventData.tz
         );
-        if (icsContent) {
-            downloadICSFile(icsContent);
-        }
+
+        // webcal:// triggers native calendar app
+        // This works on: iPhone, iPad, Android, Mac, Windows
+        window.location.href = webcalUrl;
     });
 
     // Outlook Calendar Button
@@ -378,16 +312,12 @@ function init() {
     try {
         const eventData = getURLParameters();
 
-        // Validate required parameters
         if (!eventData.start || !eventData.end) {
             showError('This invite link is missing required event information.');
             return;
         }
 
-        // Display event information
         displayEventInfo(eventData);
-
-        // Setup calendar buttons
         setupCalendarButtons(eventData);
     } catch (error) {
         console.error('Error initializing page:', error);
@@ -395,5 +325,4 @@ function init() {
     }
 }
 
-// Run on page load
 document.addEventListener('DOMContentLoaded', init);
