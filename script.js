@@ -9,7 +9,7 @@
 
 // Cloudflare Worker endpoint for ICS generation
 // UPDATE THIS after deploying your worker!
-const ICS_WORKER_HOST = 'inviteday-ics.YOUR-SUBDOMAIN.workers.dev';
+const ICS_WORKER_HOST = 'inviteday-ics.claritytoolslab.workers.dev';
 
 // ========================================
 // Parse URL Parameters
