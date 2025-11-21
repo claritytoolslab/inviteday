@@ -20,13 +20,63 @@ function getURLParameters() {
 }
 
 // ========================================
+// Robust ISO Date Parsing (Safari compatible)
+// ========================================
+
+function parseISODate(isoString) {
+    // Safari doesn't always handle timezone offsets correctly
+    // Parse manually to ensure cross-browser compatibility
+    if (!isoString) return null;
+
+    // Try native parsing first
+    let date = new Date(isoString);
+    if (!isNaN(date.getTime())) {
+        return date;
+    }
+
+    // Manual parsing for Safari compatibility
+    // Format: 2026-01-31T16:00:00+02:00 or 2026-01-31T16:00:00Z
+    const regex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})([+-](\d{2}):(\d{2})|Z)?$/;
+    const match = isoString.match(regex);
+
+    if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1; // JS months are 0-indexed
+        const day = parseInt(match[3], 10);
+        const hours = parseInt(match[4], 10);
+        const minutes = parseInt(match[5], 10);
+        const seconds = parseInt(match[6], 10);
+
+        // Create date in UTC first
+        date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+
+        // Apply timezone offset if present
+        if (match[7] && match[7] !== 'Z') {
+            const sign = match[7].charAt(0) === '+' ? -1 : 1;
+            const offsetHours = parseInt(match[8], 10);
+            const offsetMinutes = parseInt(match[9], 10);
+            const offsetMs = sign * (offsetHours * 60 + offsetMinutes) * 60 * 1000;
+            date = new Date(date.getTime() + offsetMs);
+        }
+
+        return date;
+    }
+
+    return null;
+}
+
+// ========================================
 // Date & Time Formatting
 // ========================================
 
 function formatEventDateTime(startISO, endISO, timezone) {
     try {
-        const startDate = new Date(startISO);
-        const endDate = new Date(endISO);
+        const startDate = parseISODate(startISO);
+        const endDate = parseISODate(endISO);
+
+        if (!startDate || !endDate) {
+            throw new Error('Failed to parse dates');
+        }
 
         // Format date: "Saturday, March 1, 2025"
         const dateOptions = {
@@ -67,8 +117,12 @@ function formatEventDateTime(startISO, endISO, timezone) {
 
 function generateGoogleCalendarURL(title, startISO, endISO, description, timezone) {
     try {
-        const startDate = new Date(startISO);
-        const endDate = new Date(endISO);
+        const startDate = parseISODate(startISO);
+        const endDate = parseISODate(endISO);
+
+        if (!startDate || !endDate) {
+            throw new Error('Failed to parse dates');
+        }
 
         // Format: YYYYMMDDTHHMMSSZ
         const formatDateForGoogle = (date) => {
@@ -130,9 +184,13 @@ function generateOutlookCalendarURL(title, startISO, endISO, description) {
 
 function generateICSFile(title, startISO, endISO, description, timezone) {
     try {
-        const startDate = new Date(startISO);
-        const endDate = new Date(endISO);
+        const startDate = parseISODate(startISO);
+        const endDate = parseISODate(endISO);
         const now = new Date();
+
+        if (!startDate || !endDate) {
+            throw new Error('Failed to parse dates');
+        }
 
         // Format dates for ICS (YYYYMMDDTHHMMSSZ)
         const formatDateForICS = (date) => {
