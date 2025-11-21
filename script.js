@@ -191,6 +191,7 @@ function generateOutlookCalendarURL(title, startISO, endISO, description) {
 // ========================================
 
 function generateWebcalURL(title, startISO, endISO, description, timezone) {
+    // Manually encode to ensure + in timezone offset becomes %2B
     const params = new URLSearchParams({
         title: title,
         start: startISO,
@@ -199,8 +200,12 @@ function generateWebcalURL(title, startISO, endISO, description, timezone) {
         tz: timezone
     });
 
+    // URLSearchParams doesn't encode +, but we need %2B for timezone offsets
+    // Replace + with %2B in the final string
+    const queryString = params.toString().replace(/\+/g, '%2B');
+
     // webcal:// protocol triggers native calendar app on all platforms
-    return `webcal://${ICS_WORKER_HOST}/?${params.toString()}`;
+    return `webcal://${ICS_WORKER_HOST}/?${queryString}`;
 }
 
 // Fallback HTTPS URL for ICS download (desktop browsers)
