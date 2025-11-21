@@ -1,0 +1,11 @@
+name = "inviteday-ics"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# After deployment, your worker will be available at:
+# https://inviteday-ics.<your-subdomain>.workers.dev/
+#
+# To deploy:
+# 1. Install Wrangler: npm install -g wrangler
+# 2. Login: wrangler login
+# 3. Deploy: wrangler deploy
