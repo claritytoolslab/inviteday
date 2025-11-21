@@ -185,17 +185,39 @@ function generateICSFile(title, startISO, endISO, description, timezone) {
 
 function downloadICSFile(icsContent, filename = 'invite.ics') {
     try {
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        // Detect iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+        if (isIOS) {
+            // For iOS: Use data URI approach which works better
+            const dataUri = 'data:text/calendar,' + encodeURIComponent(icsContent);
+            window.open(dataUri, '_blank');
+
+            // Show helpful message for iOS users
+            setTimeout(() => {
+                alert('Calendar file opened. Tap "Add" or "Add All" to save the event to your calendar.');
+            }, 500);
+        } else {
+            // For other devices: Use blob download
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
     } catch (error) {
         console.error('Error downloading ICS file:', error);
+        // Fallback: try data URI for all
+        try {
+            const dataUri = 'data:text/calendar,' + encodeURIComponent(icsContent);
+            window.open(dataUri, '_blank');
+        } catch (fallbackError) {
+            alert('Could not create calendar event. Please try Google Calendar instead.');
+        }
     }
 }
 
