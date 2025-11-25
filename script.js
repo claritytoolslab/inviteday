@@ -8,8 +8,14 @@
 // ========================================
 
 // Cloudflare Worker endpoint for ICS generation
-// UPDATE THIS after deploying your worker!
 const ICS_WORKER_HOST = 'inviteday-ics.claritytoolslab.workers.dev';
+
+// Supabase configuration
+const SUPABASE_URL = 'https://ccvidczwyklvmhwqopeu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjdmlkY3p3eWtsdm1od3FvcGV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMjI1OTEsImV4cCI6MjA3OTU5ODU5MX0.KE3zPe1zHtbVL8EJhHHTKJ6c9zdM8yMXhwd-dLhA2MI';
+
+// Initialize Supabase client
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ========================================
 // Parse URL Parameters
@@ -48,7 +54,9 @@ function getURLParameters() {
         end: fixISODate(params.get('end')),
         tz: params.get('tz') || 'UTC',
         desc: safeDecodeParam(params.get('desc')) || '',
-        img: params.get('img') || ''
+        img: params.get('img') || '',
+        eventId: params.get('eventId') || null,
+        rsvp: params.get('rsvp') === '1'
     };
 }
 
@@ -106,6 +114,11 @@ function formatEventDateTime(startISO, endISO, timezone) {
             throw new Error('Failed to parse dates');
         }
 
+        // Check if event spans multiple days
+        const startDay = new Date(startDate.toLocaleString('en-US', { timeZone: timezone })).toDateString();
+        const endDay = new Date(endDate.toLocaleString('en-US', { timeZone: timezone })).toDateString();
+        const isMultiDay = startDay !== endDay;
+
         const dateOptions = {
             weekday: 'long',
             year: 'numeric',
@@ -113,18 +126,36 @@ function formatEventDateTime(startISO, endISO, timezone) {
             day: 'numeric',
             timeZone: timezone
         };
-        const formattedDate = startDate.toLocaleDateString('en-US', dateOptions);
 
         const timeOptions = {
             hour: 'numeric',
             minute: '2-digit',
             timeZone: timezone
         };
-        const startTime = startDate.toLocaleTimeString('en-US', timeOptions);
-        const endTime = endDate.toLocaleTimeString('en-US', timeOptions);
-        const formattedTime = `${startTime} – ${endTime}`;
 
-        return { date: formattedDate, time: formattedTime };
+        if (isMultiDay) {
+            // Multi-day event: "Monday, November 23, 2025 – Tuesday, November 24, 2025"
+            const formattedStartDate = startDate.toLocaleDateString('en-US', dateOptions);
+            const formattedEndDate = endDate.toLocaleDateString('en-US', dateOptions);
+            const formattedDate = `${formattedStartDate} – ${formattedEndDate}`;
+
+            // Time: "3:00 PM – 5:00 PM"
+            const startTime = startDate.toLocaleTimeString('en-US', timeOptions);
+            const endTime = endDate.toLocaleTimeString('en-US', timeOptions);
+            const formattedTime = `${startTime} – ${endTime}`;
+
+            return { date: formattedDate, time: formattedTime };
+        } else {
+            // Single-day event: "Monday, November 23, 2025"
+            const formattedDate = startDate.toLocaleDateString('en-US', dateOptions);
+
+            // Time: "3:00 PM – 5:00 PM"
+            const startTime = startDate.toLocaleTimeString('en-US', timeOptions);
+            const endTime = endDate.toLocaleTimeString('en-US', timeOptions);
+            const formattedTime = `${startTime} – ${endTime}`;
+
+            return { date: formattedDate, time: formattedTime };
+        }
     } catch (error) {
         console.error('Error formatting date/time:', error);
         return { date: 'Date unavailable', time: 'Time unavailable' };
@@ -317,6 +348,117 @@ function showError(message) {
 }
 
 // ========================================
+// RSVP Functions
+// ========================================
+
+async function submitRSVP(eventId, status) {
+    const nameInput = document.getElementById('attendeeName');
+    const validationMessage = document.getElementById('validationMessage');
+    const attendeeName = nameInput.value.trim();
+
+    // Validate name
+    if (!attendeeName) {
+        validationMessage.style.display = 'block';
+        nameInput.focus();
+        return;
+    }
+
+    validationMessage.style.display = 'none';
+
+    try {
+        // Upsert response (update if exists, insert if new)
+        const { error } = await supabase
+            .from('responses')
+            .upsert({
+                event_id: eventId,
+                attendee_name: attendeeName,
+                status: status
+            }, {
+                onConflict: 'event_id,attendee_name'
+            });
+
+        if (error) throw error;
+
+        // Clear input and show success
+        nameInput.value = '';
+
+        // Reload responses
+        await loadResponses(eventId);
+
+        // Show brief success message
+        const successMsg = document.createElement('p');
+        successMsg.className = 'success-message';
+        successMsg.textContent = `Thanks ${attendeeName}! Your response has been recorded.`;
+        document.getElementById('rsvpSection').appendChild(successMsg);
+
+        setTimeout(() => successMsg.remove(), 3000);
+    } catch (error) {
+        console.error('Error submitting RSVP:', error);
+        alert('Failed to submit response. Please try again.');
+    }
+}
+
+async function loadResponses(eventId) {
+    const responsesList = document.getElementById('responsesList');
+
+    try {
+        const { data, error } = await supabase
+            .from('responses')
+            .select('attendee_name, status, created_at')
+            .eq('event_id', eventId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            responsesList.innerHTML = '<p class="no-responses">Be the first to respond!</p>';
+            return;
+        }
+
+        // Group responses by status
+        const statusIcon = {
+            'yes': '<span class="status-icon status-yes">✓</span>',
+            'no': '<span class="status-icon status-no">✕</span>',
+            'later': '<span class="status-icon status-later">?</span>'
+        };
+
+        const statusLabel = {
+            'yes': 'Yes',
+            'no': 'No',
+            'later': 'Later'
+        };
+
+        // Render responses
+        responsesList.innerHTML = data.map(response => `
+            <div class="response-item">
+                ${statusIcon[response.status] || ''}
+                <span class="response-name">${response.attendee_name}</span>
+                <span class="response-status">${statusLabel[response.status] || response.status}</span>
+            </div>
+        `).join('');
+
+        // Show responses section
+        document.getElementById('responsesSection').style.display = 'block';
+    } catch (error) {
+        console.error('Error loading responses:', error);
+        responsesList.innerHTML = '<p class="error-text">Failed to load responses</p>';
+    }
+}
+
+function setupRSVP(eventId) {
+    // Show RSVP section
+    document.getElementById('rsvpSection').style.display = 'block';
+
+    // Setup RSVP button handlers
+    document.getElementById('rsvpYes').addEventListener('click', () => submitRSVP(eventId, 'yes'));
+    document.getElementById('rsvpMaybe').addEventListener('click', () => submitRSVP(eventId, 'later'));
+    document.getElementById('rsvpNo').addEventListener('click', () => submitRSVP(eventId, 'no'));
+
+    // Load existing responses
+    loadResponses(eventId);
+}
+
+// ========================================
 // Initialize Page
 // ========================================
 
@@ -331,6 +473,11 @@ function init() {
 
         displayEventInfo(eventData);
         setupCalendarButtons(eventData);
+
+        // Setup RSVP if enabled
+        if (eventData.rsvp && eventData.eventId) {
+            setupRSVP(eventData.eventId);
+        }
     } catch (error) {
         console.error('Error initializing page:', error);
         showError('Failed to load event information.');

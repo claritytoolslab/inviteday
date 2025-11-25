@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>You're Invited!</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
@@ -27,6 +28,35 @@
 
         <!-- Helper Text -->
         <p class="helper-text">Add this to your calendar and check if you're free.</p>
+
+        <!-- RSVP Section (only shown if rsvp=1) -->
+        <div class="rsvp-section" id="rsvpSection" style="display: none;">
+            <h3 class="rsvp-title">Will you join?</h3>
+            <input
+                type="text"
+                id="attendeeName"
+                class="name-input"
+                placeholder="Your name"
+                maxlength="50"
+            />
+            <p class="validation-message" id="validationMessage" style="display: none;">
+                Please enter your name first
+            </p>
+            <div class="rsvp-buttons">
+                <button class="rsvp-btn rsvp-yes" id="rsvpYes">
+                    <span class="rsvp-icon">✓</span>
+                    <span>Yes</span>
+                </button>
+                <button class="rsvp-btn rsvp-maybe" id="rsvpMaybe">
+                    <span class="rsvp-icon">?</span>
+                    <span>Later</span>
+                </button>
+                <button class="rsvp-btn rsvp-no" id="rsvpNo">
+                    <span class="rsvp-icon">✕</span>
+                    <span>No</span>
+                </button>
+            </div>
+        </div>
 
         <!-- Calendar Buttons -->
         <div class="buttons-section">
@@ -57,6 +87,14 @@
                 </svg>
                 <span>Add to Outlook</span>
             </button>
+        </div>
+
+        <!-- Responses Section (only shown if rsvp=1) -->
+        <div class="responses-section" id="responsesSection" style="display: none;">
+            <h3 class="responses-title">Guests so far</h3>
+            <div class="responses-list" id="responsesList">
+                <p class="loading-text">Loading responses...</p>
+            </div>
         </div>
 
         <!-- Description Section (if present) -->
