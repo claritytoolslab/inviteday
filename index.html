@@ -32,6 +32,15 @@
         <!-- RSVP Section (only shown if rsvp=1) -->
         <div class="rsvp-section" id="rsvpSection" style="display: none;">
             <h3 class="rsvp-title">Will you join?</h3>
+
+            <!-- Responding As (shown after first RSVP) -->
+            <div class="responding-as" id="respondingAs" style="display: none;">
+                <p class="responding-label">Responding as:</p>
+                <p class="responding-name"></p>
+                <button class="change-name-btn" id="changeNameBtn">Change name</button>
+            </div>
+
+            <!-- Name Input (shown on first visit) -->
             <input
                 type="text"
                 id="attendeeName"
@@ -42,6 +51,7 @@
             <p class="validation-message" id="validationMessage" style="display: none;">
                 Please enter your name first
             </p>
+
             <div class="rsvp-buttons">
                 <button class="rsvp-btn rsvp-yes" id="rsvpYes">
                     <span class="rsvp-icon">✓</span>

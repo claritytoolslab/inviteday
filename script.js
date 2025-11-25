@@ -333,6 +333,60 @@ function setupCalendarButtons(eventData) {
 }
 
 // ========================================
+// LocalStorage for RSVP tracking
+// ========================================
+
+function getStoredName(eventId) {
+    return localStorage.getItem(`rsvp_name_${eventId}`);
+}
+
+function storeName(eventId, name) {
+    localStorage.setItem(`rsvp_name_${eventId}`, name);
+}
+
+function clearStoredName(eventId) {
+    localStorage.removeItem(`rsvp_name_${eventId}`);
+}
+
+// ========================================
+// RSVP UI Mode Management
+// ========================================
+
+function showRespondingAsMode(eventId, name) {
+    // Hide name input and validation message
+    document.getElementById('attendeeName').style.display = 'none';
+    document.getElementById('validationMessage').style.display = 'none';
+
+    // Show "responding as" message
+    const respondingAsDiv = document.getElementById('respondingAs');
+    respondingAsDiv.style.display = 'block';
+    respondingAsDiv.querySelector('.responding-name').textContent = name;
+
+    // Update RSVP title
+    document.querySelector('.rsvp-title').textContent = 'Update your response';
+
+    // Store the current name for button handlers
+    window.currentRSVPName = name;
+}
+
+function showNameInputMode() {
+    // Show name input
+    document.getElementById('attendeeName').style.display = 'block';
+
+    // Hide "responding as" message
+    const respondingAsDiv = document.getElementById('respondingAs');
+    if (respondingAsDiv) {
+        respondingAsDiv.style.display = 'none';
+    }
+
+    // Reset RSVP title
+    document.querySelector('.rsvp-title').textContent = 'Will you join?';
+
+    // Clear stored name
+    window.currentRSVPName = null;
+}
+
+// ========================================
 // Error Handling
 // ========================================
 
@@ -354,16 +408,22 @@ function showError(message) {
 async function submitRSVP(eventId, status) {
     const nameInput = document.getElementById('attendeeName');
     const validationMessage = document.getElementById('validationMessage');
-    const attendeeName = nameInput.value.trim();
 
-    // Validate name
-    if (!attendeeName) {
-        validationMessage.style.display = 'block';
-        nameInput.focus();
-        return;
+    // Get attendee name from either stored name or input field
+    let attendeeName;
+    if (window.currentRSVPName) {
+        // User has already RSVP'd - use stored name
+        attendeeName = window.currentRSVPName;
+    } else {
+        // First time RSVP - validate input
+        attendeeName = nameInput.value.trim();
+        if (!attendeeName) {
+            validationMessage.style.display = 'block';
+            nameInput.focus();
+            return;
+        }
+        validationMessage.style.display = 'none';
     }
-
-    validationMessage.style.display = 'none';
 
     try {
         // Upsert response (update if exists, insert if new)
@@ -379,8 +439,14 @@ async function submitRSVP(eventId, status) {
 
         if (error) throw error;
 
+        // Store name in localStorage for future visits (prevents spam)
+        storeName(eventId, attendeeName);
+
         // Clear input and show success
         nameInput.value = '';
+
+        // Switch to "responding as" mode
+        showRespondingAsMode(eventId, attendeeName);
 
         // Reload responses
         await loadResponses(eventId);
@@ -449,10 +515,31 @@ function setupRSVP(eventId) {
     // Show RSVP section
     document.getElementById('rsvpSection').style.display = 'block';
 
+    // Check if user has already RSVP'd for this event (spam prevention)
+    const storedName = getStoredName(eventId);
+    if (storedName) {
+        // User has already RSVP'd - show "responding as" mode
+        showRespondingAsMode(eventId, storedName);
+    } else {
+        // First time - show normal input mode
+        showNameInputMode();
+    }
+
     // Setup RSVP button handlers
     document.getElementById('rsvpYes').addEventListener('click', () => submitRSVP(eventId, 'yes'));
     document.getElementById('rsvpMaybe').addEventListener('click', () => submitRSVP(eventId, 'later'));
     document.getElementById('rsvpNo').addEventListener('click', () => submitRSVP(eventId, 'no'));
+
+    // Setup "Change name" button handler (if it exists)
+    const changeNameBtn = document.getElementById('changeNameBtn');
+    if (changeNameBtn) {
+        changeNameBtn.addEventListener('click', () => {
+            // Clear stored name for this event
+            clearStoredName(eventId);
+            // Reset UI to show input mode
+            showNameInputMode();
+        });
+    }
 
     // Load existing responses
     loadResponses(eventId);

@@ -219,6 +219,47 @@ body {
     text-align: center;
 }
 
+/* Responding As Box (spam prevention) */
+.responding-as {
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
+    border: 2px solid #d4a5f4;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.responding-label {
+    font-size: 14px;
+    color: #7d5ba6;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.responding-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2d2d2d;
+    margin-bottom: 12px;
+}
+
+.change-name-btn {
+    background: transparent;
+    border: 2px solid #d4a5f4;
+    color: #7d5ba6;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.change-name-btn:hover {
+    background: #d4a5f4;
+    color: white;
+}
+
 .rsvp-buttons {
     display: flex;
     gap: 8px;
