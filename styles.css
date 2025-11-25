@@ -240,24 +240,7 @@ body {
     font-size: 20px;
     font-weight: 700;
     color: #2d2d2d;
-    margin-bottom: 12px;
-}
-
-.change-name-btn {
-    background: transparent;
-    border: 2px solid #d4a5f4;
-    color: #7d5ba6;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.change-name-btn:hover {
-    background: #d4a5f4;
-    color: white;
+    margin-bottom: 0;
 }
 
 .rsvp-buttons {

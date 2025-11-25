@@ -530,17 +530,6 @@ function setupRSVP(eventId) {
     document.getElementById('rsvpMaybe').addEventListener('click', () => submitRSVP(eventId, 'later'));
     document.getElementById('rsvpNo').addEventListener('click', () => submitRSVP(eventId, 'no'));
 
-    // Setup "Change name" button handler (if it exists)
-    const changeNameBtn = document.getElementById('changeNameBtn');
-    if (changeNameBtn) {
-        changeNameBtn.addEventListener('click', () => {
-            // Clear stored name for this event
-            clearStoredName(eventId);
-            // Reset UI to show input mode
-            showNameInputMode();
-        });
-    }
-
     // Load existing responses
     loadResponses(eventId);
 }
