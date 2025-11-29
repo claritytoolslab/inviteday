@@ -54,6 +54,7 @@ function getURLParameters() {
         end: fixISODate(params.get('end')),
         tz: params.get('tz') || 'UTC',
         desc: safeDecodeParam(params.get('desc')) || '',
+        location: safeDecodeParam(params.get('location')) || '',
         img: params.get('img') || '',
         eventId: params.get('eventId') || null,
         rsvp: params.get('rsvp') === '1'
@@ -269,6 +270,13 @@ function displayEventInfo(eventData) {
     const { date, time } = formatEventDateTime(eventData.start, eventData.end, eventData.tz);
     document.getElementById('eventDate').textContent = date;
     document.getElementById('eventTime').textContent = time;
+
+    // Display location if available
+    if (eventData.location) {
+        const locationEl = document.getElementById('eventLocation');
+        locationEl.textContent = '📍 ' + eventData.location;
+        locationEl.style.display = 'block';
+    }
 
     if (eventData.desc) {
         document.getElementById('descriptionText').textContent = eventData.desc;

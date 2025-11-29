@@ -93,6 +93,13 @@ body {
     font-weight: 500;
 }
 
+.event-location {
+    font-size: 15px;
+    color: #A87CBF;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
 /* ========================================
    Helper Text
    ======================================== */
