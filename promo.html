@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InviteDay - Create Beautiful Event Invites</title>
+    <meta name="description" content="Create beautiful event invites and share them anywhere. Track RSVPs in real-time. Add to any calendar.">
+
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1d1d1f;
+            background: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        .logo-section {
+            margin-bottom: 20px;
+        }
+
+        .logo-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #D999B0, #A87CBF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: #86868b;
+        }
+
+        /* Navigation */
+        nav {
+            text-align: center;
+            margin: 30px 0;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        nav a {
+            color: #A87CBF;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #D999B0;
+            text-decoration: underline;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 60px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            line-height: 1.5;
+            color: #86868b;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* App Store Badge */
+        .app-store-section {
+            margin: 40px 0;
+        }
+
+        .coming-soon-badge {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #D999B0, #A87CBF);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(168, 124, 191, 0.3);
+        }
+
+        .coming-soon-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(168, 124, 191, 0.4);
+        }
+
+        /* Features Section */
+        .features-section {
+            margin: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #1d1d1f;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin: 0 auto;
+            max-width: 1000px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(217, 153, 176, 0.05), rgba(168, 124, 191, 0.05));
+            border-radius: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(168, 124, 191, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+        }
+
+        .feature p {
+            font-size: 1.05rem;
+            color: #86868b;
+            line-height: 1.6;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            margin: 80px 0;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(217, 153, 176, 0.08), rgba(168, 124, 191, 0.08));
+            border-radius: 20px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #D999B0, #A87CBF);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .step h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .step p {
+            font-size: 1rem;
+            color: #86868b;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            margin: 80px 0;
+            text-align: center;
+        }
+
+        .pricing-box {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(217, 153, 176, 0.1), rgba(168, 124, 191, 0.1));
+            border: 2px solid #A87CBF;
+            border-radius: 20px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #D999B0, #A87CBF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .pricing-box p {
+            font-size: 1.1rem;
+            color: #86868b;
+            margin: 12px 0;
+        }
+
+        .pricing-features {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            font-size: 1.05rem;
+            color: #1d1d1f;
+            margin: 12px 0;
+            list-style: none;
+        }
+
+        .pricing-features li::before {
+            content: "✓";
+            color: #A87CBF;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-top: 1px solid #d2d2d7;
+            margin-top: 80px;
+        }
+
+        .footer-links {
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            color: #A87CBF;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #D999B0;
+            text-decoration: underline;
+        }
+
+        .footer-info p {
+            margin: 8px 0;
+            font-size: 0.95rem;
+            color: #86868b;
+        }
+
+        .footer-info strong {
+            color: #1d1d1f;
+        }
+
+        .footer-info a {
+            color: #A87CBF;
+            text-decoration: none;
+        }
+
+        .footer-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .price {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid #d2d2d7;
+            margin: 60px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="logo-section">
+                <h1>InviteDay</h1>
+                <p class="tagline">Create beautiful event invites — share anywhere</p>
+            </div>
+        </header>
+
+        <nav>
+            <a href="promo.html">Home</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+        </nav>
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1 class="hero-title">Create beautiful event invites — share anywhere.</h1>
+            <p class="hero-subtitle">Design stunning invites, track RSVPs in real-time, and let guests add events to their calendars with one tap.</p>
+
+            <div class="app-store-section">
+                <a href="#" class="coming-soon-badge">📱 Coming Soon to App Store</a>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2 class="section-title">Everything you need for perfect events</h2>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📅</div>
+                    <h3>Beautiful Design</h3>
+                    <p>Create stunning event invites with custom titles, dates, locations, and descriptions in seconds.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Share Anywhere</h3>
+                    <p>Share invites via WhatsApp, iMessage, email, or any messaging app with a simple shareable link.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Track RSVPs</h3>
+                    <p>See who's coming in real-time. Track yes, maybe, and no responses all in one place.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Add to Calendar</h3>
+                    <p>Let guests add events to Google Calendar, Apple Calendar, or Outlook with one tap.</p>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- How It Works Section -->
+        <div class="how-it-works">
+            <h2 class="section-title">How it works</h2>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Create</h3>
+                    <p>Fill in event details: title, date, time, and location</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Share</h3>
+                    <p>Send the invite link via your favorite messaging app</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Track</h3>
+                    <p>Watch RSVPs roll in and see who's coming</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Celebrate</h3>
+                    <p>Guests add to their calendars and show up on time</p>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Pricing Section -->
+        <div class="pricing-section">
+            <h2 class="section-title">Simple Pricing</h2>
+
+            <div class="pricing-box">
+                <div class="price">Free</div>
+                <p><strong>Currently free for all users</strong></p>
+                <p>All features included, no credit card required</p>
+
+                <ul class="pricing-features">
+                    <li>Unlimited event invites</li>
+                    <li>Unlimited RSVP tracking</li>
+                    <li>Share via any app</li>
+                    <li>Calendar integration (Google, Apple, Outlook)</li>
+                    <li>Beautiful pastel design</li>
+                    <li>Real-time RSVP updates</li>
+                </ul>
+
+                <p style="margin-top: 30px; font-size: 0.95rem; color: #86868b;"><em>Optional subscription features coming soon to support ongoing development</em></p>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+
+            <div class="footer-info">
+                <p><strong>InviteDay</strong> - Create beautiful event invites</p>
+                <p>Developed by Miika Kettunen | <a href="mailto:clarityeventsai@gmail.com">clarityeventsai@gmail.com</a></p>
+                <p><em>© 2025 InviteDay. All rights reserved.</em></p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
