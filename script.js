@@ -348,12 +348,23 @@ function getStoredName(eventId) {
     return localStorage.getItem(`rsvp_name_${eventId}`);
 }
 
+function getStoredShowName(eventId) {
+    const stored = localStorage.getItem(`rsvp_showName_${eventId}`);
+    // Default to true if not set
+    return stored === null ? true : stored === 'true';
+}
+
 function storeName(eventId, name) {
     localStorage.setItem(`rsvp_name_${eventId}`, name);
 }
 
+function storeShowName(eventId, showName) {
+    localStorage.setItem(`rsvp_showName_${eventId}`, showName.toString());
+}
+
 function clearStoredName(eventId) {
     localStorage.removeItem(`rsvp_name_${eventId}`);
+    localStorage.removeItem(`rsvp_showName_${eventId}`);
 }
 
 // ========================================
@@ -369,6 +380,13 @@ function showRespondingAsMode(eventId, name) {
     const respondingAsDiv = document.getElementById('respondingAs');
     respondingAsDiv.style.display = 'block';
     respondingAsDiv.querySelector('.responding-name').textContent = name;
+
+    // Restore checkbox state from localStorage
+    const savedShowName = getStoredShowName(eventId);
+    const checkbox = document.getElementById('showNameCheckbox');
+    if (checkbox) {
+        checkbox.checked = savedShowName;
+    }
 
     // Update RSVP title
     document.querySelector('.rsvp-title').textContent = 'Update your response';
@@ -455,8 +473,9 @@ async function submitRSVP(eventId, status) {
             throw new Error(errorData.error || 'Failed to submit RSVP');
         }
 
-        // Store name in localStorage for future visits (prevents spam)
+        // Store name and showName preference in localStorage for future visits
         storeName(eventId, attendeeName);
+        storeShowName(eventId, showNameCheckbox ? showNameCheckbox.checked : true);
 
         // Clear input and show success
         nameInput.value = '';
@@ -486,8 +505,9 @@ async function loadResponses(eventId) {
     try {
         const { data, error } = await supabase
             .from('responses')
-            .select('attendee_name, status, created_at')
+            .select('attendee_name, status, created_at, show_name')
             .eq('event_id', eventId)
+            .eq('show_name', true)  // Only show responses where user opted in
             .order('created_at', { ascending: false });
 
         if (error) throw error;
