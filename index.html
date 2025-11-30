@@ -48,6 +48,22 @@
                 placeholder="Your name"
                 maxlength="50"
             />
+
+            <!-- Privacy Checkbox -->
+            <div style="margin: 12px 0; text-align: left;">
+                <label style="display: flex; align-items: center; font-size: 14px; color: #666;">
+                    <input type="checkbox" id="showNameCheckbox" checked style="margin-right: 8px;">
+                    <span>Show my name to other attendees</span>
+                </label>
+            </div>
+
+            <!-- Privacy Policy Text -->
+            <p style="font-size: 12px; color: #888; margin: 8px 0 16px 0;">
+                By tapping RSVP you agree to our
+                <a href="privacy.html" style="color: #A87CBF; text-decoration: none;">Privacy Policy</a> and
+                <a href="terms.html" style="color: #A87CBF; text-decoration: none;">Data Practices</a>.
+            </p>
+
             <p class="validation-message" id="validationMessage" style="display: none;">
                 Please enter your name first
             </p>

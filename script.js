@@ -416,6 +416,7 @@ function showError(message) {
 async function submitRSVP(eventId, status) {
     const nameInput = document.getElementById('attendeeName');
     const validationMessage = document.getElementById('validationMessage');
+    const showNameCheckbox = document.getElementById('showNameCheckbox');
 
     // Get attendee name from either stored name or input field
     let attendeeName;
@@ -434,18 +435,25 @@ async function submitRSVP(eventId, status) {
     }
 
     try {
-        // Upsert response (update if exists, insert if new)
-        const { error } = await supabase
-            .from('responses')
-            .upsert({
-                event_id: eventId,
-                attendee_name: attendeeName,
-                status: status
-            }, {
-                onConflict: 'event_id,attendee_name'
-            });
+        // Submit RSVP via Edge Function (encrypts name)
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/submit-rsvp`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON_KEY
+            },
+            body: JSON.stringify({
+                eventId: eventId,
+                attendeeName: attendeeName,
+                status: status,
+                showName: showNameCheckbox ? showNameCheckbox.checked : true
+            })
+        });
 
-        if (error) throw error;
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to submit RSVP');
+        }
 
         // Store name in localStorage for future visits (prevents spam)
         storeName(eventId, attendeeName);
