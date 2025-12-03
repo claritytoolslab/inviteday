@@ -278,8 +278,12 @@ function initializeTranslations() {
     const attendeeName = document.getElementById('attendeeName');
     if (attendeeName) attendeeName.placeholder = t('name_placeholder');
 
+    // Update both checkbox labels (one for first-time, one for returning users)
     const showNameCheckboxLabel = document.getElementById('showNameCheckboxLabel');
     if (showNameCheckboxLabel) showNameCheckboxLabel.textContent = t('show_name_checkbox');
+
+    const showNameCheckboxLabelFirstTime = document.getElementById('showNameCheckboxLabelFirstTime');
+    if (showNameCheckboxLabelFirstTime) showNameCheckboxLabelFirstTime.textContent = t('show_name_checkbox');
 
     // Privacy text - need to reconstruct with links
     const privacyText = document.getElementById('privacyText');
@@ -745,15 +749,17 @@ function showError(message) {
 async function submitRSVP(eventId, status) {
     const nameInput = document.getElementById('attendeeName');
     const validationMessage = document.getElementById('validationMessage');
-    const showNameCheckbox = document.getElementById('showNameCheckbox');
 
     // Get attendee name from either stored name or input field
     let attendeeName;
+    let showNameCheckbox;
+
     if (window.currentRSVPName) {
-        // User has already RSVP'd - use stored name
+        // User has already RSVP'd - use stored name and returning user checkbox
         attendeeName = window.currentRSVPName;
+        showNameCheckbox = document.getElementById('showNameCheckbox');
     } else {
-        // First time RSVP - validate input
+        // First time RSVP - validate input and use first-time checkbox
         attendeeName = nameInput.value.trim();
         if (!attendeeName) {
             validationMessage.style.display = 'block';
@@ -761,6 +767,7 @@ async function submitRSVP(eventId, status) {
             return;
         }
         validationMessage.style.display = 'none';
+        showNameCheckbox = document.getElementById('showNameCheckboxInputFirstTime');
     }
 
     try {
