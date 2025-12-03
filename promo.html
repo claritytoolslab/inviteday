@@ -312,6 +312,45 @@
             text-decoration: underline;
         }
 
+        /* Image Styles */
+        .hero-image {
+            max-width: 400px;
+            width: 100%;
+            margin: 40px auto 0;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: translateY(-8px);
+        }
+
+        .feature-image {
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto 20px;
+            display: block;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(168, 124, 191, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 16px 50px rgba(168, 124, 191, 0.3);
+        }
+
+        .step-image {
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto 16px;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .logo-section h1 {
@@ -326,6 +365,10 @@
                 font-size: 1.2rem;
             }
 
+            .hero-image {
+                max-width: 300px;
+            }
+
             .section-title {
                 font-size: 2rem;
             }
@@ -334,8 +377,16 @@
                 grid-template-columns: 1fr;
             }
 
+            .feature-image {
+                max-width: 240px;
+            }
+
             .steps {
                 grid-template-columns: 1fr;
+            }
+
+            .step-image {
+                max-width: 180px;
             }
 
             .price {
@@ -374,6 +425,8 @@
             <div class="app-store-section">
                 <a href="#" class="coming-soon-badge">📱 Coming Soon to App Store</a>
             </div>
+
+            <img src="images/promo_1.png" alt="Create Event in seconds" class="hero-image">
         </div>
 
         <hr>
@@ -384,25 +437,25 @@
 
             <div class="features">
                 <div class="feature">
-                    <div class="feature-icon">📅</div>
+                    <img src="images/promo_1.png" alt="Beautiful Design" class="feature-image">
                     <h3>Beautiful Design</h3>
                     <p>Create stunning event invites with custom titles, dates, locations, and descriptions in seconds.</p>
                 </div>
 
                 <div class="feature">
-                    <div class="feature-icon">🔗</div>
+                    <img src="images/promo_4.png" alt="Share Anywhere" class="feature-image">
                     <h3>Share Anywhere</h3>
                     <p>Share invites via WhatsApp, iMessage, email, or any messaging app with a simple shareable link.</p>
                 </div>
 
                 <div class="feature">
-                    <div class="feature-icon">📊</div>
+                    <img src="images/promo_7.png" alt="Track RSVPs" class="feature-image">
                     <h3>Track RSVPs</h3>
                     <p>See who's coming in real-time. Track yes, maybe, and no responses all in one place.</p>
                 </div>
 
                 <div class="feature">
-                    <div class="feature-icon">📱</div>
+                    <img src="images/promo_2.png" alt="Add to Calendar" class="feature-image">
                     <h3>Add to Calendar</h3>
                     <p>Let guests add events to Google Calendar, Apple Calendar, or Outlook with one tap.</p>
                 </div>
@@ -417,24 +470,28 @@
 
             <div class="steps">
                 <div class="step">
+                    <img src="images/promo_1.png" alt="Create Event" class="step-image">
                     <div class="step-number">1</div>
                     <h3>Create</h3>
                     <p>Fill in event details: title, date, time, and location</p>
                 </div>
 
                 <div class="step">
+                    <img src="images/promo_5.png" alt="Share Invite" class="step-image">
                     <div class="step-number">2</div>
                     <h3>Share</h3>
                     <p>Send the invite link via your favorite messaging app</p>
                 </div>
 
                 <div class="step">
+                    <img src="images/promo_6.png" alt="Guest RSVP" class="step-image">
                     <div class="step-number">3</div>
                     <h3>Track</h3>
                     <p>Watch RSVPs roll in and see who's coming</p>
                 </div>
 
                 <div class="step">
+                    <img src="images/promo_7.png" alt="RSVP Dashboard" class="step-image">
                     <div class="step-number">4</div>
                     <h3>Celebrate</h3>
                     <p>Guests add to their calendars and show up on time</p>
