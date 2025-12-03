@@ -721,7 +721,7 @@ function showNameInputMode() {
     }
 
     // Reset RSVP title
-    document.querySelector('.rsvp-title').textContent = 'Will you join?';
+    document.querySelector('.rsvp-title').textContent = t('rsvp_title');
 
     // Clear stored name
     window.currentRSVPName = null;
