@@ -18,6 +18,257 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ========================================
+// Localization
+// ========================================
+
+const translations = {
+    en: {
+        welcome: "Welcome",
+        loading: "Loading...",
+        calendar_helper_text: "Add this to your calendar and check if you're free.",
+        rsvp_title: "Will you join?",
+        responding_as: "Responding as:",
+        name_placeholder: "Your name",
+        show_name_checkbox: "Show my name to other attendees",
+        privacy_text_prefix: "By tapping RSVP you agree to our",
+        privacy_policy: "Privacy Policy",
+        data_practices: "Data Practices",
+        validation_message: "Please enter your name first",
+        rsvp_yes: "Yes",
+        rsvp_later: "Later",
+        rsvp_no: "No",
+        add_to_google: "Add to Google Calendar",
+        add_to_apple: "Add to Apple / iOS / Other",
+        add_to_outlook: "Add to Outlook",
+        guests_so_far: "Guests so far",
+        loading_responses: "Loading responses...",
+        details: "Details",
+        invite_created: "Invite created with InviteDay",
+        update_response: "Update your response",
+        rsvp_success: "Thanks {name}! Your response has been recorded.",
+        be_first_to_respond: "Be the first to respond!",
+        error_load_responses: "Failed to load responses",
+        error_title: "Oops! Something went wrong",
+        error_missing_info: "This invite link is missing required event information.",
+        error_failed_to_load: "Failed to load event information."
+    },
+    es: {
+        welcome: "Bienvenido",
+        loading: "Cargando...",
+        calendar_helper_text: "Agrega esto a tu calendario y verifica si estás libre.",
+        rsvp_title: "¿Vendrás?",
+        responding_as: "Respondiendo como:",
+        name_placeholder: "Tu nombre",
+        show_name_checkbox: "Mostrar mi nombre a otros asistentes",
+        privacy_text_prefix: "Al tocar RSVP aceptas nuestra",
+        privacy_policy: "Política de Privacidad",
+        data_practices: "Prácticas de Datos",
+        validation_message: "Por favor ingresa tu nombre primero",
+        rsvp_yes: "Sí",
+        rsvp_later: "Más Tarde",
+        rsvp_no: "No",
+        add_to_google: "Agregar a Google Calendar",
+        add_to_apple: "Agregar a Apple / iOS / Otro",
+        add_to_outlook: "Agregar a Outlook",
+        guests_so_far: "Invitados hasta ahora",
+        loading_responses: "Cargando respuestas...",
+        details: "Detalles",
+        invite_created: "Invitación creada con InviteDay",
+        update_response: "Actualiza tu respuesta",
+        rsvp_success: "¡Gracias {name}! Tu respuesta ha sido registrada.",
+        be_first_to_respond: "¡Sé el primero en responder!",
+        error_load_responses: "Error al cargar respuestas",
+        error_title: "¡Ups! Algo salió mal",
+        error_missing_info: "Este enlace de invitación no tiene la información del evento requerida.",
+        error_failed_to_load: "Error al cargar la información del evento."
+    },
+    de: {
+        welcome: "Willkommen",
+        loading: "Lädt...",
+        calendar_helper_text: "Füge dies zu deinem Kalender hinzu und prüfe, ob du frei bist.",
+        rsvp_title: "Kommst du?",
+        responding_as: "Antworte als:",
+        name_placeholder: "Dein Name",
+        show_name_checkbox: "Meinen Namen anderen Teilnehmern zeigen",
+        privacy_text_prefix: "Durch Tippen auf RSVP stimmst du unserer",
+        privacy_policy: "Datenschutzrichtlinie",
+        data_practices: "Datenpraktiken",
+        validation_message: "Bitte gib zuerst deinen Namen ein",
+        rsvp_yes: "Ja",
+        rsvp_later: "Später",
+        rsvp_no: "Nein",
+        add_to_google: "Zu Google Kalender hinzufügen",
+        add_to_apple: "Zu Apple / iOS / Andere hinzufügen",
+        add_to_outlook: "Zu Outlook hinzufügen",
+        guests_so_far: "Gäste bisher",
+        loading_responses: "Lade Antworten...",
+        details: "Details",
+        invite_created: "Einladung erstellt mit InviteDay",
+        update_response: "Aktualisiere deine Antwort",
+        rsvp_success: "Danke {name}! Deine Antwort wurde gespeichert.",
+        be_first_to_respond: "Sei der Erste, der antwortet!",
+        error_load_responses: "Antworten konnten nicht geladen werden",
+        error_title: "Hoppla! Etwas ist schief gelaufen",
+        error_missing_info: "Dieser Einladungslink enthält nicht die erforderlichen Event-Informationen.",
+        error_failed_to_load: "Event-Informationen konnten nicht geladen werden."
+    },
+    fr: {
+        welcome: "Bienvenue",
+        loading: "Chargement...",
+        calendar_helper_text: "Ajoutez ceci à votre calendrier et vérifiez si vous êtes libre.",
+        rsvp_title: "Viendrez-vous ?",
+        responding_as: "Répondre en tant que :",
+        name_placeholder: "Votre nom",
+        show_name_checkbox: "Afficher mon nom aux autres participants",
+        privacy_text_prefix: "En appuyant sur RSVP, vous acceptez notre",
+        privacy_policy: "Politique de Confidentialité",
+        data_practices: "Pratiques de Données",
+        validation_message: "Veuillez d'abord entrer votre nom",
+        rsvp_yes: "Oui",
+        rsvp_later: "Plus Tard",
+        rsvp_no: "Non",
+        add_to_google: "Ajouter à Google Agenda",
+        add_to_apple: "Ajouter à Apple / iOS / Autre",
+        add_to_outlook: "Ajouter à Outlook",
+        guests_so_far: "Invités jusqu'à présent",
+        loading_responses: "Chargement des réponses...",
+        details: "Détails",
+        invite_created: "Invitation créée avec InviteDay",
+        update_response: "Mettez à jour votre réponse",
+        rsvp_success: "Merci {name} ! Votre réponse a été enregistrée.",
+        be_first_to_respond: "Soyez le premier à répondre !",
+        error_load_responses: "Échec du chargement des réponses",
+        error_title: "Oups ! Quelque chose s'est mal passé",
+        error_missing_info: "Ce lien d'invitation ne contient pas les informations d'événement requises.",
+        error_failed_to_load: "Échec du chargement des informations de l'événement."
+    },
+    ja: {
+        welcome: "ようこそ",
+        loading: "読み込み中...",
+        calendar_helper_text: "これをカレンダーに追加して、予定が空いているか確認してください。",
+        rsvp_title: "参加しますか？",
+        responding_as: "返信者：",
+        name_placeholder: "お名前",
+        show_name_checkbox: "他の参加者に名前を表示する",
+        privacy_text_prefix: "RSVPをタップすることで",
+        privacy_policy: "プライバシーポリシー",
+        data_practices: "データ取り扱い",
+        validation_message: "まず名前を入力してください",
+        rsvp_yes: "はい",
+        rsvp_later: "後で",
+        rsvp_no: "いいえ",
+        add_to_google: "Googleカレンダーに追加",
+        add_to_apple: "Apple / iOS / その他に追加",
+        add_to_outlook: "Outlookに追加",
+        guests_so_far: "これまでのゲスト",
+        loading_responses: "返信を読み込み中...",
+        details: "詳細",
+        invite_created: "InviteDayで作成された招待状",
+        update_response: "返信を更新",
+        rsvp_success: "ありがとうございます、{name}さん！返信を記録しました。",
+        be_first_to_respond: "最初の返信者になりましょう！",
+        error_load_responses: "返信の読み込みに失敗しました",
+        error_title: "エラーが発生しました",
+        error_missing_info: "この招待リンクには必要なイベント情報がありません。",
+        error_failed_to_load: "イベント情報の読み込みに失敗しました。"
+    }
+};
+
+// Get language from URL parameter, fallback to English
+let currentLanguage = 'en';
+function getLanguage() {
+    const params = new URLSearchParams(window.location.search);
+    const lang = params.get('lang');
+    // Validate language exists in translations
+    if (lang && translations[lang]) {
+        return lang;
+    }
+    return 'en'; // Default to English for backward compatibility
+}
+
+// Translation function
+function t(key) {
+    const lang = translations[currentLanguage];
+    return lang && lang[key] ? lang[key] : translations.en[key] || key;
+}
+
+// Initialize language
+currentLanguage = getLanguage();
+
+// Initialize all static translations
+function initializeTranslations() {
+    // Update HTML lang attribute
+    document.documentElement.lang = currentLanguage;
+
+    // Welcome section
+    const welcomeText = document.getElementById('welcomeText');
+    if (welcomeText) welcomeText.textContent = t('welcome');
+
+    // Helper text
+    const helperText = document.getElementById('helperText');
+    if (helperText) helperText.textContent = t('calendar_helper_text');
+
+    // RSVP section
+    const rsvpTitle = document.getElementById('rsvpTitle');
+    if (rsvpTitle) rsvpTitle.textContent = t('rsvp_title');
+
+    const respondingLabel = document.getElementById('respondingLabel');
+    if (respondingLabel) respondingLabel.textContent = t('responding_as');
+
+    const attendeeName = document.getElementById('attendeeName');
+    if (attendeeName) attendeeName.placeholder = t('name_placeholder');
+
+    const showNameCheckboxLabel = document.getElementById('showNameCheckboxLabel');
+    if (showNameCheckboxLabel) showNameCheckboxLabel.textContent = t('show_name_checkbox');
+
+    // Privacy text - need to reconstruct with links
+    const privacyText = document.getElementById('privacyText');
+    if (privacyText) {
+        privacyText.innerHTML = `${t('privacy_text_prefix')}
+            <a href="privacy.html" style="color: #A87CBF; text-decoration: none;">${t('privacy_policy')}</a> ${t('data_practices').toLowerCase().includes('and') ? '' : 'and'}
+            <a href="terms.html" style="color: #A87CBF; text-decoration: none;">${t('data_practices')}</a>.`;
+    }
+
+    const validationMessage = document.getElementById('validationMessage');
+    if (validationMessage) validationMessage.textContent = t('validation_message');
+
+    // RSVP buttons
+    const rsvpYesText = document.getElementById('rsvpYesText');
+    if (rsvpYesText) rsvpYesText.textContent = t('rsvp_yes');
+
+    const rsvpLaterText = document.getElementById('rsvpLaterText');
+    if (rsvpLaterText) rsvpLaterText.textContent = t('rsvp_later');
+
+    const rsvpNoText = document.getElementById('rsvpNoText');
+    if (rsvpNoText) rsvpNoText.textContent = t('rsvp_no');
+
+    // Calendar buttons
+    const googleBtnText = document.getElementById('googleBtnText');
+    if (googleBtnText) googleBtnText.textContent = t('add_to_google');
+
+    const appleBtnText = document.getElementById('appleBtnText');
+    if (appleBtnText) appleBtnText.textContent = t('add_to_apple');
+
+    const outlookBtnText = document.getElementById('outlookBtnText');
+    if (outlookBtnText) outlookBtnText.textContent = t('add_to_outlook');
+
+    // Responses section
+    const guestsSoFarTitle = document.getElementById('guestsSoFarTitle');
+    if (guestsSoFarTitle) guestsSoFarTitle.textContent = t('guests_so_far');
+
+    const loadingResponsesText = document.getElementById('loadingResponsesText');
+    if (loadingResponsesText) loadingResponsesText.textContent = t('loading_responses');
+
+    // Details section
+    const detailsTitle = document.getElementById('detailsTitle');
+    if (detailsTitle) detailsTitle.textContent = t('details');
+
+    // Footer
+    const footerText = document.getElementById('footerText');
+    if (footerText) footerText.textContent = t('invite_created');
+}
+
+// ========================================
 // Parse URL Parameters
 // ========================================
 
@@ -389,7 +640,7 @@ function showRespondingAsMode(eventId, name) {
     }
 
     // Update RSVP title
-    document.querySelector('.rsvp-title').textContent = 'Update your response';
+    document.querySelector('.rsvp-title').textContent = t('update_response');
 
     // Store the current name for button handlers
     window.currentRSVPName = name;
@@ -420,7 +671,7 @@ function showError(message) {
     const container = document.querySelector('.container');
     container.innerHTML = `
         <div class="error-message">
-            <h2>Oops! Something went wrong</h2>
+            <h2>${t('error_title')}</h2>
             <p>${message}</p>
             <p style="margin-top: 12px; font-size: 14px;">Please check the invite link and try again.</p>
         </div>
@@ -489,7 +740,7 @@ async function submitRSVP(eventId, status) {
         // Show brief success message
         const successMsg = document.createElement('p');
         successMsg.className = 'success-message';
-        successMsg.textContent = `Thanks ${attendeeName}! Your response has been recorded.`;
+        successMsg.textContent = t('rsvp_success').replace('{name}', attendeeName);
         document.getElementById('rsvpSection').appendChild(successMsg);
 
         setTimeout(() => successMsg.remove(), 3000);
@@ -513,7 +764,7 @@ async function loadResponses(eventId) {
         if (error) throw error;
 
         if (!data || data.length === 0) {
-            responsesList.innerHTML = '<p class="no-responses">Be the first to respond!</p>';
+            responsesList.innerHTML = `<p class="no-responses">${t('be_first_to_respond')}</p>`;
             return;
         }
 
@@ -543,7 +794,7 @@ async function loadResponses(eventId) {
         document.getElementById('responsesSection').style.display = 'block';
     } catch (error) {
         console.error('Error loading responses:', error);
-        responsesList.innerHTML = '<p class="error-text">Failed to load responses</p>';
+        responsesList.innerHTML = `<p class="error-text">${t('error_load_responses')}</p>`;
     }
 }
 
@@ -576,10 +827,13 @@ function setupRSVP(eventId) {
 
 function init() {
     try {
+        // Initialize translations first
+        initializeTranslations();
+
         const eventData = getURLParameters();
 
         if (!eventData.start || !eventData.end) {
-            showError('This invite link is missing required event information.');
+            showError(t('error_missing_info'));
             return;
         }
 
@@ -592,7 +846,7 @@ function init() {
         }
     } catch (error) {
         console.error('Error initializing page:', error);
-        showError('Failed to load event information.');
+        showError(t('error_failed_to_load'));
     }
 }
 
