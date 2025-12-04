@@ -421,6 +421,20 @@ function parseISODate(isoString) {
 // Date & Time Formatting
 // ========================================
 
+// Helper to get browser locale from language code
+function getLocaleFromLanguage(lang) {
+    const localeMap = {
+        'en': 'en-US',
+        'fi': 'fi-FI',
+        'sv': 'sv-SE',
+        'de': 'de-DE',
+        'fr': 'fr-FR',
+        'es': 'es-ES',
+        'ja': 'ja-JP'
+    };
+    return localeMap[lang] || 'en-US';
+}
+
 function formatEventDateTime(startISO, endISO, timezone) {
     try {
         const startDate = parseISODate(startISO);
@@ -431,8 +445,9 @@ function formatEventDateTime(startISO, endISO, timezone) {
         }
 
         // Check if event spans multiple days
-        const startDay = new Date(startDate.toLocaleString('en-US', { timeZone: timezone })).toDateString();
-        const endDay = new Date(endDate.toLocaleString('en-US', { timeZone: timezone })).toDateString();
+        const locale = getLocaleFromLanguage(currentLanguage);
+        const startDay = new Date(startDate.toLocaleString(locale, { timeZone: timezone })).toDateString();
+        const endDay = new Date(endDate.toLocaleString(locale, { timeZone: timezone })).toDateString();
         const isMultiDay = startDay !== endDay;
 
         const dateOptions = {
@@ -451,23 +466,23 @@ function formatEventDateTime(startISO, endISO, timezone) {
 
         if (isMultiDay) {
             // Multi-day event: "Monday, November 23, 2025 – Tuesday, November 24, 2025"
-            const formattedStartDate = startDate.toLocaleDateString('en-US', dateOptions);
-            const formattedEndDate = endDate.toLocaleDateString('en-US', dateOptions);
+            const formattedStartDate = startDate.toLocaleDateString(locale, dateOptions);
+            const formattedEndDate = endDate.toLocaleDateString(locale, dateOptions);
             const formattedDate = `${formattedStartDate} – ${formattedEndDate}`;
 
             // Time: "3:00 PM – 5:00 PM"
-            const startTime = startDate.toLocaleTimeString('en-US', timeOptions);
-            const endTime = endDate.toLocaleTimeString('en-US', timeOptions);
+            const startTime = startDate.toLocaleTimeString(locale, timeOptions);
+            const endTime = endDate.toLocaleTimeString(locale, timeOptions);
             const formattedTime = `${startTime} – ${endTime}`;
 
             return { date: formattedDate, time: formattedTime };
         } else {
             // Single-day event: "Monday, November 23, 2025"
-            const formattedDate = startDate.toLocaleDateString('en-US', dateOptions);
+            const formattedDate = startDate.toLocaleDateString(locale, dateOptions);
 
             // Time: "3:00 PM – 5:00 PM"
-            const startTime = startDate.toLocaleTimeString('en-US', timeOptions);
-            const endTime = endDate.toLocaleTimeString('en-US', timeOptions);
+            const startTime = startDate.toLocaleTimeString(locale, timeOptions);
+            const endTime = endDate.toLocaleTimeString(locale, timeOptions);
             const formattedTime = `${startTime} – ${endTime}`;
 
             return { date: formattedDate, time: formattedTime };
