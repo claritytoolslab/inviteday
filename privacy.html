@@ -71,6 +71,20 @@
             text-decoration: underline;
         }
 
+        /* Language Picker */
+        .lang-picker {
+            text-align: center;
+            margin: 20px 0 40px;
+            padding: 15px;
+            background: #f5f5f7;
+            border-radius: 8px;
+        }
+
+        .lang-picker a {
+            margin: 0 10px;
+            font-size: 0.95rem;
+        }
+
         /* Content */
         .content {
             padding: 20px 0;
@@ -196,8 +210,17 @@
             <a href="terms.html">Terms</a>
         </nav>
 
+        <div class="lang-picker">
+            <strong>Language:</strong>
+            <a href="privacy.html">🇬🇧 English</a>
+            <a href="privacy-es.html">🇪🇸 Español</a>
+            <a href="privacy-de.html">🇩🇪 Deutsch</a>
+            <a href="privacy-fr.html">🇫🇷 Français</a>
+            <a href="privacy-ja.html">🇯🇵 日本語</a>
+        </div>
+
         <div class="content">
-            <p class="last-updated"><strong>Last Updated:</strong> November 29, 2025</p>
+            <p class="last-updated"><strong>Last Updated:</strong> December 6, 2025</p>
 
             <h2>Introduction</h2>
             <p>InviteDay ("we," "our," or "the app") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect your personal information when you use our mobile application.</p>
@@ -228,15 +251,59 @@
                 <li>Improve the app experience</li>
             </ul>
 
+            <h2>Data Encryption & Security</h2>
+            <div class="highlight-box">
+                <h3>🔒 Bank-Level Encryption</h3>
+                <p>Your RSVP data is protected with industry-standard encryption:</p>
+                <ul>
+                    <li><strong>AES-256-GCM Encryption:</strong> All RSVP responses (names, emails, dietary preferences) are encrypted on your device before being sent to our servers.</li>
+                    <li><strong>Zero-Knowledge Architecture:</strong> Only you, the event creator, can decrypt and read RSVP responses. Our servers store encrypted data but cannot read it.</li>
+                    <li><strong>Client-Side Key Derivation:</strong> Encryption keys are generated on your iPhone/iPad using PBKDF2 (100,000 iterations) and never leave your device.</li>
+                    <li><strong>Transport Security:</strong> All communications use HTTPS/TLS 1.3 encryption.</li>
+                </ul>
+                <p><strong>What this means for you:</strong> Invited guests cannot see other people's RSVP responses. Only you, the event creator, can view who has responded to your event.</p>
+            </div>
+
+            <h2>Automatic Data Deletion</h2>
+            <div class="highlight-box">
+                <h3>🗑️ Privacy-First: 7-Day Auto-Delete</h3>
+                <p>To protect your privacy and comply with GDPR data minimization principles, we automatically delete event data from our cloud database <strong>7 days after your event ends</strong>.</p>
+
+                <h4>What Gets Deleted:</h4>
+                <ul>
+                    <li>All RSVP responses (encrypted and metadata)</li>
+                    <li>Event details (title, description, location, dates)</li>
+                    <li>Short links (invite URLs stop working)</li>
+                </ul>
+
+                <h4>What Stays on Your Phone:</h4>
+                <ul>
+                    <li>Your event history and RSVP stats remain cached locally in the InviteDay app</li>
+                    <li>You can still view past events for your records</li>
+                    <li>Cached data is labeled "(Cached)" in the app</li>
+                </ul>
+
+                <h4>After Deletion:</h4>
+                <ul>
+                    <li>✅ Invite links return a "Event has ended" page</li>
+                    <li>✅ No one can RSVP to expired events</li>
+                    <li>✅ RSVP data is permanently deleted from our servers</li>
+                    <li>✅ Only you retain access to historical stats on your device</li>
+                </ul>
+
+                <p><strong>Cleanup Schedule:</strong> Automatic deletion runs daily at 3:00 AM UTC using a secure database function.</p>
+            </div>
+
             <h2>Third-Party Services</h2>
 
             <h3>Supabase (Backend Infrastructure)</h3>
             <p>We use Supabase to store and manage:</p>
             <ul>
                 <li>Event data (titles, dates, locations, descriptions)</li>
-                <li>RSVP responses from attendees</li>
+                <li>Encrypted RSVP responses (server cannot decrypt)</li>
                 <li>Short link mappings</li>
                 <li>All communications use HTTPS encryption</li>
+                <li><strong>Data Location:</strong> EU-hosted servers (Frankfurt, Germany)</li>
                 <li><strong>Supabase Privacy Policy:</strong> <a href="https://supabase.com/privacy" target="_blank">https://supabase.com/privacy</a></li>
             </ul>
 
@@ -250,10 +317,19 @@
 
             <h2>Data Storage and Retention</h2>
             <ul>
-                <li><strong>Local Storage:</strong> Your created events are stored locally on your device using SwiftData.</li>
-                <li><strong>Cloud Storage:</strong> Event invite pages and RSVP responses are stored in Supabase database for sharing and tracking purposes.</li>
-                <li><strong>Retention Period:</strong> Event data and RSVPs are retained until you delete the event from the app.</li>
-                <li><strong>Short Links:</strong> Short links remain active until manually deleted.</li>
+                <li><strong>Local Storage:</strong> Your created events are stored locally on your device using SwiftData (encrypted by iOS).</li>
+                <li><strong>Cloud Storage:</strong> Event invite pages and encrypted RSVP responses are stored in Supabase database.</li>
+                <li><strong>Automatic Deletion:</strong> All event data and RSVPs are <strong>automatically deleted 7 days after the event ends</strong>.</li>
+                <li><strong>Manual Deletion:</strong> You can delete events anytime before the auto-delete period in the app settings.</li>
+                <li><strong>Short Links:</strong> Short links expire when the event is deleted (automatic or manual).</li>
+            </ul>
+
+            <h2>Who Can See Your Data</h2>
+            <ul>
+                <li><strong>Event Creator (You):</strong> Full access to all event details and RSVP responses via the InviteDay app.</li>
+                <li><strong>Invited Guests:</strong> Can only see public event details (title, date, time, location). <strong>Cannot see other people's RSVP responses.</strong></li>
+                <li><strong>InviteDay/Servers:</strong> Store encrypted RSVP data but <strong>cannot decrypt or read</strong> responses due to zero-knowledge architecture.</li>
+                <li><strong>Third Parties:</strong> We do <strong>NOT</strong> sell or share your data with advertisers or data brokers.</li>
             </ul>
 
             <h2>Your Rights Under GDPR</h2>
@@ -266,19 +342,22 @@
                 <li><strong>Right to Object:</strong> You can object to data processing by not using certain features.</li>
                 <li><strong>Right to Restrict Processing:</strong> You can limit how we process your data.</li>
             </ol>
-            <p>To exercise any of these rights, please contact us at <a href="mailto:clarityeventsai@gmail.com">clarityeventsai@gmail.com</a>.</p>
+            <p>To exercise any of these rights, please contact us at <a href="mailto:kettunen.miika@gmail.com">kettunen.miika@gmail.com</a>.</p>
 
-            <h2>Data Security</h2>
-            <p>We implement industry-standard security measures:</p>
+            <h2>Data Security Measures</h2>
+            <p>We implement multiple layers of security:</p>
             <ul>
-                <li>All communications with Supabase use HTTPS encryption</li>
-                <li>Event data stored securely in Supabase PostgreSQL database</li>
-                <li>Access controls and authentication for database access</li>
-                <li>No sensitive payment information stored on our servers (handled by Apple/RevenueCat)</li>
+                <li><strong>End-to-End Encryption:</strong> AES-256-GCM encryption for all RSVP data</li>
+                <li><strong>Secure Key Storage:</strong> Encryption keys derived on-device, never transmitted</li>
+                <li><strong>Transport Security:</strong> HTTPS/TLS 1.3 for all network communications</li>
+                <li><strong>Database Security:</strong> Row-level security policies in Supabase PostgreSQL</li>
+                <li><strong>Access Controls:</strong> Authentication required for all database operations</li>
+                <li><strong>No Payment Data:</strong> We never handle credit cards (managed by Apple/RevenueCat)</li>
+                <li><strong>Automatic Deletion:</strong> Data minimization through 7-day auto-delete policy</li>
             </ul>
 
             <h2>Children's Privacy</h2>
-            <p>InviteDay is not directed to children under 13 years of age. We do not knowingly collect personal information from children under 13.</p>
+            <p>InviteDay is not directed to children under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us immediately.</p>
 
             <h2>Pricing & Subscription</h2>
             <div class="highlight-box">
@@ -286,22 +365,29 @@
                 <p>InviteDay is currently free to use with all features available. We plan to introduce optional subscription features in the future, but core event creation and RSVP tracking will remain available.</p>
             </div>
 
+            <h2>International Data Transfers</h2>
+            <p>Your data is primarily stored in EU-hosted servers (Supabase Frankfurt). If you are outside the EU, your data may be transferred to and processed in the EU. We ensure adequate safeguards are in place for such transfers in compliance with GDPR.</p>
+
             <h2>Changes to This Privacy Policy</h2>
             <p>We may update this Privacy Policy from time to time. We will notify you of any changes by updating the "Last Updated" date at the top of this policy and, if changes are significant, by providing a notice in the app.</p>
 
             <h2>Contact Us</h2>
             <p>If you have questions about this Privacy Policy or want to exercise your GDPR rights, please contact us:</p>
-            <p><strong>Email:</strong> <a href="mailto:clarityeventsai@gmail.com">clarityeventsai@gmail.com</a><br>
-            <strong>Developer:</strong> Miika Kettunen</p>
+            <p><strong>Email:</strong> <a href="mailto:kettunen.miika@gmail.com">kettunen.miika@gmail.com</a><br>
+            <strong>Developer:</strong> Miika Petteri Kettunen<br>
+            <strong>Address:</strong> Talvionpolku 1, 04300 Tuusula, Finland</p>
 
-            <h2>Summary</h2>
+            <h2>Privacy Summary</h2>
             <div class="highlight-box">
                 <ul>
-                    <li>✅ We store event data and RSVPs in Supabase for sharing and tracking</li>
-                    <li>✅ We do NOT sell your data to third parties</li>
-                    <li>✅ You can delete your events and RSVPs anytime in the app</li>
-                    <li>✅ You have full GDPR rights to access, delete, and port your data</li>
-                    <li>✅ All data transmission is encrypted via HTTPS</li>
+                    <li>🔒 RSVP data encrypted with AES-256-GCM (bank-level security)</li>
+                    <li>🔐 Zero-knowledge: Only you can decrypt RSVP responses</li>
+                    <li>🗑️ Automatic deletion: All data removed 7 days after event ends</li>
+                    <li>👁️ Privacy-first: Guests cannot see other people's responses</li>
+                    <li>🚫 We do NOT sell your data to third parties</li>
+                    <li>✅ You can delete your events anytime in the app</li>
+                    <li>✅ Full GDPR rights: access, delete, port your data</li>
+                    <li>🌍 EU-hosted servers (Frankfurt, Germany)</li>
                     <li>✅ Currently free - subscription features coming soon</li>
                 </ul>
             </div>
@@ -309,7 +395,7 @@
 
         <footer>
             <p><strong>InviteDay</strong> - Create beautiful event invites</p>
-            <p>Developed by Miika Kettunen | <a href="mailto:clarityeventsai@gmail.com">clarityeventsai@gmail.com</a></p>
+            <p>Developed by Miika Petteri Kettunen | <a href="mailto:kettunen.miika@gmail.com">kettunen.miika@gmail.com</a></p>
             <p><em>© 2025 InviteDay. All rights reserved.</em></p>
         </footer>
     </div>
