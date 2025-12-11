@@ -529,3 +529,40 @@ body {
     margin: 20px 0;
     font-weight: 500;
 }
+
+/* ===================================================================
+   Dietary & Plus-One Fields
+   =================================================================== */
+
+.field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.text-input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #d63384;
+}
+
+.text-input::placeholder {
+    color: #999;
+}
+
+#dietarySection,
+#plusOneSection {
+    margin-top: 16px;
+}

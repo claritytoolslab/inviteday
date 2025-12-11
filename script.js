@@ -764,6 +764,8 @@ function showError(message) {
 async function submitRSVP(eventId, status) {
     const nameInput = document.getElementById('attendeeName');
     const validationMessage = document.getElementById('validationMessage');
+    const dietaryInput = document.getElementById('dietaryRestrictions');
+    const plusOneInput = document.getElementById('plusOneName');
 
     // Get attendee name from either stored name or input field
     let attendeeName;
@@ -797,7 +799,9 @@ async function submitRSVP(eventId, status) {
                 eventId: eventId,
                 attendeeName: attendeeName,
                 status: status,
-                showName: showNameCheckbox ? showNameCheckbox.checked : true
+                showName: showNameCheckbox ? showNameCheckbox.checked : true,
+                dietaryInfo: dietaryInput ? dietaryInput.value.trim() : '',
+                plusOneName: plusOneInput ? plusOneInput.value.trim() : ''
             })
         });
 
@@ -904,6 +908,43 @@ function setupRSVP(eventId) {
 }
 
 // ========================================
+// Fetch Event Settings (Dietary & Plus-One)
+// ========================================
+
+async function fetchEventSettings(eventId) {
+    try {
+        const { data: eventSettings, error } = await supabase
+            .from('events')
+            .select('ask_dietary_restrictions, ask_plus_one')
+            .eq('id', eventId)
+            .single();
+
+        if (!error && eventSettings) {
+            const askDietaryRestrictions = eventSettings.ask_dietary_restrictions || false;
+            const askPlusOne = eventSettings.ask_plus_one || false;
+
+            // Show/hide conditional fields
+            const dietarySection = document.getElementById('dietarySection');
+            const plusOneSection = document.getElementById('plusOneSection');
+
+            if (askDietaryRestrictions && dietarySection) {
+                dietarySection.style.display = 'block';
+                document.getElementById('dietaryLabel').textContent = t('dietary_restrictions_label');
+                document.getElementById('dietaryRestrictions').placeholder = t('dietary_restrictions_placeholder');
+            }
+
+            if (askPlusOne && plusOneSection) {
+                plusOneSection.style.display = 'block';
+                document.getElementById('plusOneLabel').textContent = t('plus_one_label');
+                document.getElementById('plusOneName').placeholder = t('plus_one_placeholder');
+            }
+        }
+    } catch (err) {
+        console.error('Failed to fetch event settings:', err);
+    }
+}
+
+// ========================================
 // Initialize Page
 // ========================================
 
@@ -925,6 +966,9 @@ function init() {
         // Setup RSVP if enabled
         if (eventData.rsvp && eventData.eventId) {
             setupRSVP(eventData.eventId);
+
+            // Fetch event settings from Supabase (dietary & plus-one)
+            fetchEventSettings(eventData.eventId);
         }
     } catch (error) {
         console.error('Error initializing page:', error);

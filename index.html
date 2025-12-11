@@ -65,6 +65,18 @@
 
             <p class="validation-message" id="validationMessage" style="display: none;">Please enter your name first</p>
 
+            <!-- Dietary Restrictions (conditionally shown) -->
+            <div id="dietarySection" style="display: none;">
+                <label class="field-label" id="dietaryLabel">Dietary restrictions</label>
+                <input type="text" id="dietaryRestrictions" class="text-input" placeholder="e.g., vegetarian, gluten-free">
+            </div>
+
+            <!-- Plus-One (conditionally shown) -->
+            <div id="plusOneSection" style="display: none;">
+                <label class="field-label" id="plusOneLabel">Bringing a plus-one?</label>
+                <input type="text" id="plusOneName" class="text-input" placeholder="Name of your guest">
+            </div>
+
             <div class="rsvp-buttons">
                 <button class="rsvp-btn rsvp-yes" id="rsvpYes">
                     <span class="rsvp-icon">✓</span>
