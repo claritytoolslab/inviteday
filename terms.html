@@ -201,7 +201,7 @@
         </nav>
 
         <div class="content">
-            <p class="last-updated"><strong>Last Updated:</strong> November 29, 2025</p>
+            <p class="last-updated"><strong>Last Updated:</strong> December 6, 2025</p>
 
             <h2>1. Acceptance of Terms</h2>
             <p>By downloading, installing, or using InviteDay ("the app"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the app.</p>
@@ -276,12 +276,37 @@
             <p>By using these integrations, you agree to the respective service's terms of service. We are not responsible for the functionality or availability of third-party calendar services.</p>
 
             <h2>7. RSVP and Event Data</h2>
+
+            <div class="highlight-box">
+                <h3>🔒 Data Encryption & Privacy</h3>
+                <p>Your RSVP data is protected with bank-level security:</p>
+                <ul>
+                    <li><strong>AES-256-GCM Encryption:</strong> All RSVP responses are encrypted on your device before transmission</li>
+                    <li><strong>Zero-Knowledge Architecture:</strong> Only event creators can decrypt RSVP data. We cannot read attendee information</li>
+                    <li><strong>Client-Side Keys:</strong> Encryption keys are generated on your device and never leave it</li>
+                    <li><strong>Privacy First:</strong> Invited guests cannot see other people's RSVP responses</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🗑️ Automatic Data Deletion</h3>
+                <p>To protect your privacy, we automatically delete all event data <strong>7 days after your event ends</strong>:</p>
+                <ul>
+                    <li>All RSVP responses are permanently removed from our servers</li>
+                    <li>Event details and short links are deleted</li>
+                    <li>Invite URLs stop working after deletion</li>
+                    <li>Your event history remains cached locally on your device for your records</li>
+                    <li>You can manually delete events anytime before the automatic deletion period</li>
+                </ul>
+            </div>
+
+            <h3>Additional Data Terms</h3>
             <ul>
-                <li>RSVP responses are stored in our Supabase database for tracking and display purposes</li>
-                <li>Event creators can see the names and responses of attendees</li>
+                <li>RSVP responses are stored encrypted in our Supabase database for tracking purposes</li>
+                <li>Event creators can see the names and responses of attendees (after decryption on their device)</li>
                 <li>You are responsible for the accuracy of RSVP information you provide</li>
                 <li>We may delete events or RSVPs that violate these Terms</li>
-                <li>You can delete your events and associated RSVP data at any time from the app</li>
+                <li>Deletion is permanent and cannot be undone after the 7-day retention period</li>
             </ul>
 
             <h2>8. Disclaimer of Warranties</h2>
@@ -332,17 +357,20 @@
 
             <h2>14. Contact Us</h2>
             <p>If you have questions about these Terms, please contact us:</p>
-            <p><strong>Email:</strong> <a href="mailto:clarityeventsai@gmail.com">clarityeventsai@gmail.com</a><br>
-            <strong>Developer:</strong> Miika Kettunen</p>
+            <p><strong>Email:</strong> <a href="mailto:kettunen.miika@gmail.com">kettunen.miika@gmail.com</a><br>
+            <strong>Developer:</strong> Miika Petteri Kettunen<br>
+            <strong>Address:</strong> Talvionpolku 1, 04300 Tuusula, Finland</p>
 
             <h2>Summary</h2>
             <div class="highlight-box">
                 <ul>
+                    <li>🔒 <strong>RSVP data encrypted</strong> with AES-256-GCM (only you can decrypt)</li>
+                    <li>🗑️ <strong>Auto-deletion:</strong> All data removed 7 days after event ends</li>
                     <li>✅ InviteDay is currently <strong>free for all users</strong></li>
                     <li>✅ Use the app responsibly for legitimate events</li>
                     <li>✅ Don't spam or harass people with invites</li>
                     <li>✅ We're not liable for missed events or calendar sync issues</li>
-                    <li>✅ You can delete your data anytime</li>
+                    <li>✅ You can manually delete your data anytime</li>
                     <li>✅ Subscription features may be introduced in the future with advance notice</li>
                 </ul>
             </div>
@@ -350,7 +378,7 @@
 
         <footer>
             <p><strong>InviteDay</strong> - Create beautiful event invites</p>
-            <p>Developed by Miika Kettunen | <a href="mailto:clarityeventsai@gmail.com">clarityeventsai@gmail.com</a></p>
+            <p>Developed by Miika Petteri Kettunen | <a href="mailto:kettunen.miika@gmail.com">kettunen.miika@gmail.com</a></p>
             <p><em>© 2025 InviteDay. All rights reserved.</em></p>
         </footer>
     </div>
