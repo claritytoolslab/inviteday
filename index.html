@@ -57,25 +57,23 @@
                 title="Name must be 1-50 characters, no special symbols"
             >
 
-            <!-- Show Name Checkbox (for first time) -->
-            <label class="show-name-label" id="showNameCheckboxFirstTime">
-                <input type="checkbox" id="showNameCheckboxInputFirstTime" checked>
-                <span id="showNameCheckboxLabelFirstTime">Show my name to other attendees</span>
-            </label>
-
             <p class="validation-message" id="validationMessage" style="display: none;">Please enter your name first</p>
 
             <!-- Dietary Restrictions (conditionally shown) -->
             <div id="dietarySection" style="display: none;">
-                <label class="field-label" id="dietaryLabel">Dietary restrictions</label>
                 <input type="text" id="dietaryRestrictions" class="text-input" placeholder="e.g., vegetarian, gluten-free">
             </div>
 
             <!-- Plus-One (conditionally shown) -->
             <div id="plusOneSection" style="display: none;">
-                <label class="field-label" id="plusOneLabel">Bringing a plus-one?</label>
                 <input type="text" id="plusOneName" class="text-input" placeholder="Name of your guest">
             </div>
+
+            <!-- Show Name Checkbox (after dietary/plus-one fields) -->
+            <label class="show-name-label" id="showNameCheckboxFirstTime">
+                <input type="checkbox" id="showNameCheckboxInputFirstTime" checked>
+                <span id="showNameCheckboxLabelFirstTime">Show my name to other attendees</span>
+            </label>
 
             <div class="rsvp-buttons">
                 <button class="rsvp-btn rsvp-yes" id="rsvpYes">

@@ -953,14 +953,12 @@ async function fetchEventSettings(eventId) {
 
             if (askDietaryRestrictions && dietarySection) {
                 dietarySection.style.display = 'block';
-                document.getElementById('dietaryLabel').textContent = t('dietary_restrictions_label');
-                document.getElementById('dietaryRestrictions').placeholder = t('dietary_restrictions_placeholder');
+                document.getElementById('dietaryRestrictions').placeholder = t('dietary_restrictions_label');
             }
 
             if (askPlusOne && plusOneSection) {
                 plusOneSection.style.display = 'block';
-                document.getElementById('plusOneLabel').textContent = t('plus_one_label');
-                document.getElementById('plusOneName').placeholder = t('plus_one_placeholder');
+                document.getElementById('plusOneName').placeholder = t('plus_one_label');
             }
         }
     } catch (err) {
