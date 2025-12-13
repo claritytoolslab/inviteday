@@ -862,7 +862,7 @@ async function loadResponses(eventId) {
     try {
         const { data, error } = await supabase
             .from('responses')
-            .select('attendee_name, status, created_at, show_name')
+            .select('attendee_name, status, created_at, show_name, dietary_info, plus_one_name')
             .eq('event_id', eventId)
             .eq('show_name', true)  // Only show responses where user opted in
             .order('created_at', { ascending: false });
@@ -888,13 +888,29 @@ async function loadResponses(eventId) {
         };
 
         // Render responses
-        responsesList.innerHTML = data.map(response => `
-            <div class="response-item">
-                ${statusIcon[response.status] || ''}
-                <span class="response-name">${response.attendee_name}</span>
-                <span class="response-status">${statusLabel[response.status] || response.status}</span>
-            </div>
-        `).join('');
+        responsesList.innerHTML = data.map(response => {
+            // Build dietary info text
+            let dietaryText = '';
+            if (response.dietary_info && response.dietary_info.trim()) {
+                dietaryText = `<div class="response-dietary">🍽️ ${response.dietary_info}</div>`;
+            }
+
+            // Build plus-one text
+            let plusOneText = '';
+            if (response.plus_one_name && response.plus_one_name.trim()) {
+                plusOneText = `<div class="response-plusone">➕ ${response.plus_one_name}</div>`;
+            }
+
+            return `
+                <div class="response-item">
+                    ${statusIcon[response.status] || ''}
+                    <span class="response-name">${response.attendee_name}</span>
+                    <span class="response-status">${statusLabel[response.status] || response.status}</span>
+                    ${dietaryText}
+                    ${plusOneText}
+                </div>
+            `;
+        }).join('');
 
         // Show responses section
         document.getElementById('responsesSection').style.display = 'block';
