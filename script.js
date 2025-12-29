@@ -15,7 +15,7 @@ const SUPABASE_URL = 'https://ccvidczwyklvmhwqopeu.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjdmlkY3p3eWtsdm1od3FvcGV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMjI1OTEsImV4cCI6MjA3OTU5ODU5MX0.KE3zPe1zHtbVL8EJhHHTKJ6c9zdM8yMXhwd-dLhA2MI';
 
 // Initialize Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ========================================
 // Localization
@@ -860,7 +860,7 @@ async function loadResponses(eventId) {
     const responsesList = document.getElementById('responsesList');
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('responses')
             .select('attendee_name, status, created_at, show_name, dietary_info, plus_one_name')
             .eq('event_id', eventId)
@@ -949,7 +949,7 @@ function setupRSVP(eventId) {
 
 async function fetchEventSettings(eventId) {
     try {
-        const { data: eventSettings, error } = await supabase
+        const { data: eventSettings, error } = await supabaseClient
             .from('events')
             .select('ask_dietary_restrictions, ask_plus_one')
             .eq('id', eventId)
